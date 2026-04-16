@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "index.html#omopstudybuilder",
+    "href": "index.html#omopstudybuilder",
+    "title": "OmopStudyBuilder",
+    "section": "OmopStudyBuilder",
+    "text": "OmopStudyBuilder"
+  },
+  {
+    "objectID": "index.html#background",
+    "href": "index.html#background",
+    "title": "OmopStudyBuilder",
+    "section": "Background",
+    "text": "Background\n\nMulti-site OMOP studies face long-term reproducibility challenges.\nrenv helps short-term collaboration, but long-term reproducibility can still break.\nCommon failure points include:\n\nDifferent R versions used at restore time.\nOperating system and software differences across partner sites.\nHidden system requirements such as Java, curl, and other shared libraries.\n\nContainers improve portability, but not every data partner can adopt Docker because of local IT and security restrictions."
+  },
+  {
+    "objectID": "index.html#what-is-renv",
+    "href": "index.html#what-is-renv",
+    "title": "OmopStudyBuilder",
+    "section": "What is renv?",
+    "text": "What is renv?\nRecords exact R package versions so any partner can restore the same study environment.\n\nRecords the exact version of every R package used by the study.\nA partner runs renv::restore() and reinstalls the same package set with no version drift.\nThe environment is described in a single renv.lock file that travels with the study code."
+  },
+  {
+    "objectID": "index.html#what-is-docker",
+    "href": "index.html#what-is-docker",
+    "title": "OmopStudyBuilder",
+    "section": "What is Docker?",
+    "text": "What is Docker?\nDocker is a shipping container for the full software environment.\n\nPackages study code, R version, and system libraries into a single image.\nA partner runs the image and gets the same OS-level runtime, R version, and package stack.\nThe image can also expose RStudio Server, so partners still work in a familiar interface.\n\n\nDocker must be installed on the machine to use this option."
+  },
+  {
+    "objectID": "index.html#where-this-sits",
+    "href": "index.html#where-this-sits",
+    "title": "OmopStudyBuilder",
+    "section": "Where This Sits",
+    "text": "Where This Sits\n\n\nArachne\n\nUI-driven platform for network studies.\nRequires setup, hosting, and maintenance.\nDoes not itself guarantee reproducibility of study code.\n\n\nUlysses\n\nTemplates study execution workflows.\nCloser to a Strategus-style execution model.\nMore orchestration-focused than package-first.\n\n\nOmopStudyBuilder\n\nLower-level, code-first approach.\nStandardises the project itself.\nSupports both renv and optional containerisation."
+  },
+  {
+    "objectID": "index.html#what-omopstudybuilder-does",
+    "href": "index.html#what-omopstudybuilder-does",
+    "title": "OmopStudyBuilder",
+    "section": "What OmopStudyBuilder Does",
+    "text": "What OmopStudyBuilder Does\n\nAn opinionated R package that standardises how studies are:\n\nCreated with a consistent project structure and templates.\nReviewed with code and dependency checks.\nDistributed as a shareable folder with optional Docker image publishing.\n\nShips templates for:\n\nStudy code.\nDiagnostics code.\nShiny applications."
+  },
+  {
+    "objectID": "index.html#the-workflow",
+    "href": "index.html#the-workflow",
+    "title": "OmopStudyBuilder",
+    "section": "The Workflow",
+    "text": "The Workflow\nCreate study -&gt; Write study code -&gt; Record dependencies -&gt; Review -&gt; Build image -&gt; Run -&gt; Share\n\n\n\n\n\n\nData partners can choose their execution mode.\nOption A: run from source with renv.lock.\nOption B: run the Docker image for stronger long-term reproducibility.\nDocker commands are wrapped in R functions, so users do not need to work directly with the CLI."
+  },
+  {
+    "objectID": "index.html#why-two-execution-modes",
+    "href": "index.html#why-two-execution-modes",
+    "title": "OmopStudyBuilder",
+    "section": "Why Two Execution Modes?",
+    "text": "Why Two Execution Modes?\n\nSome partners cannot install or run Docker.\nSome studies need a portable runtime across sites for long-term reuse.\nOmopStudyBuilder keeps both paths available in the same study package."
+  },
+  {
+    "objectID": "index.html#scaffolding",
+    "href": "index.html#scaffolding",
+    "title": "OmopStudyBuilder",
+    "section": "Scaffolding",
+    "text": "Scaffolding\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\ninitStudy(here(\"SampleStudy\"))\n\n✔ SampleStudy # prepared as root folder for study\n✔ SampleStudy/diagnosticsCode # prepared for study diagnostics code\n✔ SampleStudy/diagnosticsShiny # prepared for diagnostics shiny app\n✔ SampleStudy/studyCode # prepared for study study code\n✔ SampleStudy/studyShiny # prepared for study shiny app\n\n\nCreates the initial directory structure for an OMOP CDM network study.\nGives teams a standard starting point instead of custom folders for each project."
+  },
+  {
+    "objectID": "index.html#review",
+    "href": "index.html#review",
+    "title": "OmopStudyBuilder",
+    "section": "Review",
+    "text": "Review\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\nreviewStudy(here())\n\nReviews study code.\nSummarises dependencies captured in renv.lock.\nHelps identify missing requirements before a study is distributed."
+  },
+  {
+    "objectID": "index.html#docker",
+    "href": "index.html#docker",
+    "title": "OmopStudyBuilder",
+    "section": "Docker",
+    "text": "Docker\nlibrary(OmopStudyBuilder)\n\ndockeriseStudy()\npushDockerImage()\n\nBuilds a Docker image for the study.\nPushes that image to Docker Hub or another registry for partner reuse."
+  },
+  {
+    "objectID": "index.html#typical-workflow",
+    "href": "index.html#typical-workflow",
+    "title": "OmopStudyBuilder",
+    "section": "Typical Workflow",
+    "text": "Typical Workflow\n\nlibrary(OmopStudyBuilder)\n\n\ninitStudy()\n\n\n# write study code\n\n\nreviewStudy()\n\n\nlinkGitHub() / dockeriseStudy()\n\n\npushDockerImage()\n\n\nrunStudy()\n\n\nThe package supports the study lifecycle from setup through execution and sharing."
+  },
+  {
+    "objectID": "index.html#execution-experience",
+    "href": "index.html#execution-experience",
+    "title": "OmopStudyBuilder",
+    "section": "Execution Experience",
+    "text": "Execution Experience\nlibrary(OmopStudyBuilder)\n\nrunStudy(interactive = TRUE)\n\nRuns RStudio Server for interactive study execution. \nExpects a .env file in the project root for runtime configuration."
+  },
+  {
+    "objectID": "index.html#what-this-improves",
+    "href": "index.html#what-this-improves",
+    "title": "OmopStudyBuilder",
+    "section": "What This Improves",
+    "text": "What This Improves\n\nSite differences are reduced when partners use the same image.\nThe runtime stays aligned across:\n\nR version.\nOperating system and system dependencies.\nInstalled R packages.\n\nOmopStudyBuilder smooths over practical rough edges such as:\n\nDocker availability checks.\nAutomatic port selection.\nClearer execution errors."
+  },
+  {
+    "objectID": "index.html#omopstudybuilder-2",
+    "href": "index.html#omopstudybuilder-2",
+    "title": "OmopStudyBuilder",
+    "section": "OmopStudyBuilder",
+    "text": "OmopStudyBuilder\n\n\n👉 GitHub repository\n📧 folu.akintola@ndorms.ox.ac.uk"
+  }
+]
