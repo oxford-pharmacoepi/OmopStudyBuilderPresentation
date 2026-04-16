@@ -165,7 +165,85 @@ figcaption {
     width: 100% !important;
 }
 
+.cell-output-stdout pre,
+.cell-output-stdout code {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-x: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  font-size: 0.7em !important;
+}
+
+.cell-output-stdout pre {
+  background: rgba(58, 37, 28, 0.08);
+  border-left: 4px solid $theme-blue;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin-top: 0.4rem;
+}
+
 .reveal pre {
     word-wrap: break-word !important;
     white-space: pre-wrap !important;
+}
+
+.reveal .slides section img.intro-logo {
+  display: block;
+  width: min(460px, 52%);
+  max-width: 100%;
+  max-height: 100vh;
+  height: auto;
+  margin: 2rem auto 3.5rem;
+  object-fit: contain;
+}
+
+.reveal .slides section img.workflow-diagram {
+  display: block;
+  width: 92%;
+  max-width: 100%;
+  max-height: 500px;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.reveal .slides section .workflow-layout {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 560px;
+  margin-top: 1rem;
+}
+
+.reveal .slides section .workflow-visual {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: 100%;
+}
+
+.reveal .slides section .workflow-notes {
+  flex: 1 1 50%;
+  align-self: flex-end;
+  padding-bottom: 0.5rem;
+}
+
+.reveal .slides section .workflow-notes ul {
+  margin-top: 0;
+}
+
+.reveal .slides section .workflow-step {
+  transition: opacity 0.2s ease;
+}
+
+.reveal .slides section .workflow-step.visible {
+  opacity: 0.28;
+}
+
+.reveal .slides section .workflow-step.current-fragment {
+  opacity: 1;
 }

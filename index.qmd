@@ -1,87 +1,253 @@
 ---
-title: "CohortCharacteristics"
-subtitle: "A R package to Characterise cohorts"
-format: 
+title: "OmopStudyBuilder"
+subtitle: "Reproducible Multi-Site OMOP Network Studies"
+format:
   revealjs:
-    footer: "CohortCharacteristics: R package to Characterise cohorts"
+    theme: [simple, style.scss]
+    incremental: true   
+    slide-number: true
+    chalkboard: true
+    preview-links: auto
+    margin: 0.07
+    code-link: true
+    code-line-numbers: false
+    height: 900
+    width: 1600
+    footer: "OmopStudyBuilder: reproducible OMOP network studies"
 ---
 
-## CohortCharacteristics
+## OmopStudyBuilder
 
-```{r, echo = FALSE}
-options("width"=120)
-# for the renv to be picked as as they are needed suggets
-library(duckdb)
-library(visOmopResults)
-library(gt)
-```
+<!-- Standardised scaffolding, automated review, and flexible execution for OMOP network studies. -->
 
-![](https://github.com/darwin-eu/CohortCharacteristics/blob/main/man/figures/logo.png?raw=true){fig-align="center"}
+<img src="https://raw.githubusercontent.com/oxford-pharmacoepi/OmopStudyBuilder/refs/heads/main/man/figures/image.jfif" class="intro-logo"/>
 
-## Website
+## Background
 
-Cohort characteristics is on cran:
+- Multi-site OMOP studies face long-term reproducibility challenges.
+- `renv` helps short-term collaboration, but long-term reproducibility can still break.
+- Common failure points include:
+  - Different R versions used at restore time.
+  - Operating system and software differences across partner sites.
+  - Hidden system requirements such as Java, curl, and other shared libraries.
+- Containers improve portability, but not every data partner can adopt Docker because of local IT and security restrictions.
+
+## What is `renv`?
+
+Records exact R package versions so any partner can restore the same study environment.
+
+- Records the exact version of every R package used by the study.
+- A partner runs `renv::restore()` and reinstalls the same package set with no version drift.
+- The environment is described in a single `renv.lock` file that travels with the study code.
+
+## What is `Docker`?
+
+Docker is a shipping container for the full software environment.
+
+- Packages study code, R version, and system libraries into a single image.
+- A partner runs the image and gets the same OS-level runtime, R version, and package stack.
+- The image can also expose RStudio Server, so partners still work in a familiar interface.
 
 . . .
 
-```{r, eval = FALSE}
-install.packages("CohortCharacteristics")
+Docker must be installed on the machine to use this option.
+
+## Where This Sits
+
+::: columns
+::: {.column width="33%"}
+### Arachne
+
+- UI-driven platform for network studies.
+- Requires setup, hosting, and maintenance.
+- Does not itself guarantee reproducibility of study code.
+:::
+
+::: {.column width="33%"}
+### Ulysses
+
+- Templates study execution workflows.
+- Closer to a Strategus-style execution model.
+- More orchestration-focused than package-first.
+:::
+
+::: {.column width="34%"}
+### OmopStudyBuilder
+
+- Lower-level, code-first approach.
+- Standardises the project itself.
+- Supports both `renv` and optional containerisation.
+:::
+:::
+
+## What OmopStudyBuilder Does
+
+- An opinionated R package that standardises how studies are:
+  - Created with a consistent project structure and templates.
+  - Reviewed with code and dependency checks.
+  - Distributed as a shareable folder with optional Docker image publishing.
+- Ships templates for:
+  - Study code.
+  - Diagnostics code.
+  - Shiny applications.
+
+# Workflow
+
+## The Workflow
+
+Create study -> Write study code -> Record dependencies -> Review -> Build image -> Run -> Share
+
+::: {.workflow-layout}
+::: {.workflow-visual}
+![](public/omopstudybuilder_flow.png){.workflow-diagram}
+:::
+
+::: {.workflow-notes}
+
+- Data partners can choose their execution mode.
+- Option A: run from source with `renv.lock`.
+- Option B: run the Docker image for stronger long-term reproducibility.
+- Docker commands are wrapped in R functions, so users do not need to work directly with the CLI.
+:::
+:::
+
+## Why Two Execution Modes?
+
+- Some partners cannot install or run Docker.
+- Some studies need a portable runtime across sites for long-term reuse.
+- OmopStudyBuilder keeps both paths available in the same study package.
+
+# Approach
+
+## Scaffolding
+
+```r
+library(here)
+library(OmopStudyBuilder)
+
+initStudy(here("SampleStudy"))
+
 ```
 
-. . .
+::: {.cell-output .cell-output-stdout}
+```r
+✔ SampleStudy # prepared as root folder for study
+✔ SampleStudy/diagnosticsCode # prepared for study diagnostics code
+✔ SampleStudy/diagnosticsShiny # prepared for diagnostics shiny app
+✔ SampleStudy/studyCode # prepared for study study code
+✔ SampleStudy/studyShiny # prepared for study shiny app
+```
+:::
 
-You can also install the development version from our github repo:
+- Creates the initial directory structure for an OMOP CDM network study.
+- Gives teams a standard starting point instead of custom folders for each project.
 
-. . .
+## Review
 
-```{r, eval = FALSE}
-pak::pkg_install("darwin-eu/CohortCharacteristics")
+```r
+library(here)
+library(OmopStudyBuilder)
+
+reviewStudy(here())
 ```
 
-. . .
+- Reviews study code.
+- Summarises dependencies captured in `renv.lock`.
+- Helps identify missing requirements before a study is distributed.
 
-The documentation and vignettes of the packages can be found in our page: <https://darwin-eu.github.io/CohortCharacteristics/>
+## Docker
 
-## Let's get started
+```r
+library(OmopStudyBuilder)
 
-For this presentation we will use the **GiBleed** dataset from [**omock**](https://ohdsi.github.io/omock/).
-
-```{r}
-library(omock)
-cdm <- mockCdmFromDataset(datasetName = "GiBleed", source = "duckdb")
-cdm
+dockeriseStudy()
+pushDockerImage()
 ```
 
-# Section title
+- Builds a Docker image for the study.
+- Pushes that image to Docker Hub or another registry for partner reuse.
 
-## Person table
+## Typical Workflow
 
-Let's see the *person* table:
+::: {.fragment .workflow-step}
+```r
+library(OmopStudyBuilder)
+```
+:::
 
-```{r}
-cdm$person
+::: {.fragment .workflow-step}
+```r
+initStudy()
+```
+:::
+
+::: {.fragment .workflow-step}
+```r
+# write study code
+```
+:::
+
+::: {.fragment .workflow-step}
+```r
+reviewStudy()
+```
+:::
+
+::: {.fragment .workflow-step}
+```r
+linkGitHub() / dockeriseStudy()
+```
+:::
+
+::: {.fragment .workflow-step}
+```r
+pushDockerImage()
+```
+:::
+
+::: {.fragment .workflow-step}
+```r
+runStudy()
+```
+:::
+
+- The package supports the study lifecycle from setup through execution and sharing.
+
+## Execution Experience
+
+```r
+library(OmopStudyBuilder)
+
+runStudy(interactive = TRUE)
 ```
 
-## Snapshot
+- Runs RStudio Server for interactive study execution.
+<!-- - Also supports automated execution with real-time log streaming. !-->
+- Expects a `.env` file in the project root for runtime configuration.
 
-```{r, echo=FALSE}
-library(OmopSketch)
-result <- summariseOmopSnapshot(cdm = cdm)
-tableOmopSnapshot(result = result)
-```
+## What This Improves
 
-## CohortCharacteristics
+- Site differences are reduced when partners use the same image.
+- The runtime stays aligned across:
+  - R version.
+  - Operating system and system dependencies.
+  - Installed R packages.
+- OmopStudyBuilder smooths over practical rough edges such as:
+  - Docker availability checks.
+  - Automatic port selection.
+  - Clearer execution errors.
 
-::: {style="display: flex; align-items: center; justify-content: space-between;"}
+## OmopStudyBuilder
+
+::: {style="display: flex; align-items: center; justify-content: space-between; gap: 2rem;"}
 ::: {style="flex: 1;"}
-👉 [**Packages website**](https://darwin-eu.github.io/CohortCharacteristics)\
-👉 [**CRAN link**](https://cran.r-project.org/web/packages/CohortCharacteristics)\
-👉 [**Manual**](https://cran.r-project.org/web/packages/CohortCharacteristics/CohortCharacteristics.pdf)
 
-📧 <a href="mailto:marti.catalasabate@ndorms.ox.ac.uk">marti.catalasabate\@ndorms.ox.ac.uk</a>
+👉 [GitHub repository](https://github.com/oxford-pharmacoepi/OmopStudyBuilder)
+
+📧 <a href="mailto:folu.akintola@ndorms.ox.ac.uk">folu.akintola@ndorms.ox.ac.uk</a>
 :::
 
 ::: {style="flex: 1; text-align: center;"}
-<img src="https://github.com/darwin-eu/CohortCharacteristics/blob/main/man/figures/logo.png?raw=true" width="600"/>
+<img src="https://raw.githubusercontent.com/oxford-pharmacoepi/OmopStudyBuilder/refs/heads/main/man/figures/image.jfif" width="420"/>
 :::
 :::
