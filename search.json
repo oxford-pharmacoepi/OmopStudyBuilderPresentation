@@ -32,14 +32,14 @@
     "href": "index.html#where-this-sits",
     "title": "OmopStudyBuilder",
     "section": "Where This Sits",
-    "text": "Where This Sits\n\n\nArachne\n\nUI-driven platform for network studies.\nRequires setup, hosting, and maintenance.\nDoes not itself guarantee reproducibility of study code.\n\n\nUlysses\n\nTemplates study execution workflows.\nCloser to a Strategus-style execution model.\nMore orchestration-focused than package-first.\n\n\nOmopStudyBuilder\n\nLower-level, code-first approach.\nStandardises the project itself.\nSupports both renv and optional containerisation."
+    "text": "Where This Sits\n\n\nArachne\n\nUI-driven platform for network studies.\nRequires setup, hosting, and maintenance.\nLimited flexibility for study code.\n\n\nUlysses\n\nTemplates study execution workflows.\nCloser to a Strategus-style execution model.\nLimited flexibility (more flexible than Arachne).\n\n\nOmopStudyBuilder\n\nLower-level, code-first approach.\nStandardises the project itself.\nSupports both renv and optional containerisation."
   },
   {
     "objectID": "index.html#what-omopstudybuilder-does",
     "href": "index.html#what-omopstudybuilder-does",
     "title": "OmopStudyBuilder",
     "section": "What OmopStudyBuilder Does",
-    "text": "What OmopStudyBuilder Does\n\nAn opinionated R package that standardises how studies are:\n\nCreated with a consistent project structure and templates.\nReviewed with code and dependency checks.\nDistributed as a shareable folder with optional Docker image publishing.\n\nShips templates for:\n\nStudy code.\nDiagnostics code.\nShiny applications."
+    "text": "What OmopStudyBuilder Does\n\nAn opinionated R package that standardises how studies are:\n\nCreated with a consistent project structure and templates.\nValidate the renv file (packages from CRAN, no unnecessary dependencies).\nDistributed as a shareable folder with optional Docker image publishing.\n\nShips templates for:\n\nStudy code.\nDiagnostics code.\nShiny applications."
   },
   {
     "objectID": "index.html#the-workflow",
@@ -56,25 +56,32 @@
     "text": "Why Two Execution Modes?\n\nSome partners cannot install or run Docker.\nSome studies need a portable runtime across sites for long-term reuse.\nOmopStudyBuilder keeps both paths available in the same study package."
   },
   {
-    "objectID": "index.html#scaffolding",
-    "href": "index.html#scaffolding",
+    "objectID": "index.html#create-study",
+    "href": "index.html#create-study",
     "title": "OmopStudyBuilder",
-    "section": "Scaffolding",
-    "text": "Scaffolding\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\ninitStudy(here(\"SampleStudy\"))\n\n✔ SampleStudy # prepared as root folder for study\n✔ SampleStudy/diagnosticsCode # prepared for study diagnostics code\n✔ SampleStudy/diagnosticsShiny # prepared for diagnostics shiny app\n✔ SampleStudy/studyCode # prepared for study study code\n✔ SampleStudy/studyShiny # prepared for study shiny app\n\n\nCreates the initial directory structure for an OMOP CDM network study.\nGives teams a standard starting point instead of custom folders for each project."
+    "section": "Create Study",
+    "text": "Create Study\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\ninitStudy(here(\"SampleStudy\"))\n\n✔ SampleStudy # prepared as root folder for study\n✔ SampleStudy/diagnosticsCode # prepared for study diagnostics code\n✔ SampleStudy/diagnosticsShiny # prepared for diagnostics shiny app\n✔ SampleStudy/studyCode # prepared for study study code\n✔ SampleStudy/studyShiny # prepared for study shiny app\n\n\nCreates the initial directory structure for an OMOP CDM network study.\nGives teams a standard starting point instead of custom folders for each project."
+  },
+  {
+    "objectID": "index.html#write-study-code",
+    "href": "index.html#write-study-code",
+    "title": "OmopStudyBuilder",
+    "section": "Write Study code",
+    "text": "Write Study code\nThe data scientist then writes the study-specific analysis code inside the generated project structure."
   },
   {
     "objectID": "index.html#review",
     "href": "index.html#review",
     "title": "OmopStudyBuilder",
     "section": "Review",
-    "text": "Review\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\nreviewStudy(here())\n\nReviews study code.\nSummarises dependencies captured in renv.lock.\nHelps identify missing requirements before a study is distributed."
+    "text": "Review\nlibrary(here)\nlibrary(OmopStudyBuilder)\n\nreviewStudy(here())\n\n✔ Study structure found\n✔ diagnosticsCode/ and studyCode/ detected\n✔ renv.lock found\n✔ All recorded packages are available from supported repositories\n! 1 suggested cleanup: remove an unused package from renv.lock\n\nReview summary: 4 checks passed, 1 suggestion recorded\n\n\nReviews dependencies.\nSummarises dependencies captured in renv.lock.\nHelps identify missing requirements before a study is distributed."
   },
   {
     "objectID": "index.html#docker",
     "href": "index.html#docker",
     "title": "OmopStudyBuilder",
     "section": "Docker",
-    "text": "Docker\nlibrary(OmopStudyBuilder)\n\ndockeriseStudy()\npushDockerImage()\n\nBuilds a Docker image for the study.\nPushes that image to Docker Hub or another registry for partner reuse."
+    "text": "Docker\nlibrary(OmopStudyBuilder)\n\ndockeriseStudy()\npushDockerImage()\n\n✔ Docker available and running\n✔ Building image: sample-study-code:latest\n✔ Image built successfully\n✔ Authenticating with Docker registry\n✔ Pushed image: yourname/sample-study-code:latest\n\nDocker summary: image built and published successfully\n\n\nBuilds a Docker image for the study.\nPushes that image to Docker Hub or another registry for partner reuse."
   },
   {
     "objectID": "index.html#typical-workflow",
@@ -84,11 +91,18 @@
     "text": "Typical Workflow\n\nlibrary(OmopStudyBuilder)\n\n\ninitStudy()\n\n\n# write study code\n\n\nreviewStudy()\n\n\nlinkGitHub() / dockeriseStudy()\n\n\npushDockerImage()\n\n\nrunStudy()\n\n\nThe package supports the study lifecycle from setup through execution and sharing."
   },
   {
-    "objectID": "index.html#execution-experience",
-    "href": "index.html#execution-experience",
+    "objectID": "index.html#automated-execution",
+    "href": "index.html#automated-execution",
     "title": "OmopStudyBuilder",
-    "section": "Execution Experience",
-    "text": "Execution Experience\nlibrary(OmopStudyBuilder)\n\nrunStudy(interactive = TRUE)\n\nRuns RStudio Server for interactive study execution. \nExpects a .env file in the project root for runtime configuration."
+    "section": "Automated Execution",
+    "text": "Automated Execution\nlibrary(OmopStudyBuilder)\n\nrunStudy(interactive = FALSE)\n\nRuns the R Docker image for automated execution.\nExpects a .env file in the project root for runtime configuration."
+  },
+  {
+    "objectID": "index.html#interactive-execution",
+    "href": "index.html#interactive-execution",
+    "title": "OmopStudyBuilder",
+    "section": "Interactive Execution",
+    "text": "Interactive Execution\nlibrary(OmopStudyBuilder)\n\nrunStudy(interactive = TRUE)\n\nRuns RStudio Server for interactive study execution.\nOpens in the browser with the required packages already installed."
   },
   {
     "objectID": "index.html#what-this-improves",

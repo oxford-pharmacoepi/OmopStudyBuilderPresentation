@@ -97,7 +97,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-ee210a6aa7e02a96df2469a8ea636679.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-cbf9b20651dde8fe9c1d45c02240c40f.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -252,14 +252,14 @@
 <ul>
 <li class="fragment">UI-driven platform for network studies.</li>
 <li class="fragment">Requires setup, hosting, and maintenance.</li>
-<li class="fragment">Does not itself guarantee reproducibility of study code.</li>
+<li class="fragment">Limited flexibility for study code.</li>
 </ul>
 </div><div class="column" style="width:33%;">
 <h3 id="ulysses">Ulysses</h3>
 <ul>
 <li class="fragment">Templates study execution workflows.</li>
 <li class="fragment">Closer to a Strategus-style execution model.</li>
-<li class="fragment">More orchestration-focused than package-first.</li>
+<li class="fragment">Limited flexibility (more flexible than Arachne).</li>
 </ul>
 </div><div class="column" style="width:34%;">
 <h3 id="omopstudybuilder-1">OmopStudyBuilder</h3>
@@ -276,7 +276,7 @@
 <li class="fragment">An opinionated R package that standardises how studies are:
 <ul>
 <li class="fragment">Created with a consistent project structure and templates.</li>
-<li class="fragment">Reviewed with code and dependency checks.</li>
+<li class="fragment">Validate the renv file (packages from CRAN, no unnecessary dependencies).</li>
 <li class="fragment">Distributed as a shareable folder with optional Docker image publishing.</li>
 </ul></li>
 <li class="fragment">Ships templates for:
@@ -322,8 +322,8 @@
 <h1>Approach</h1>
 
 </section>
-<section id="scaffolding" class="slide level2">
-<h2>Scaffolding</h2>
+<section id="create-study" class="slide level2">
+<h2>Create Study</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
 <span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a></span>
@@ -340,24 +340,47 @@
 <li class="fragment">Gives teams a standard starting point instead of custom folders for each project.</li>
 </ul>
 </section>
+<section id="write-study-code" class="slide level2">
+<h2>Write Study code</h2>
+<p>The data scientist then writes the study-specific analysis code inside the generated project structure.</p>
+
+<img data-src="public/jim_carrey_reaction.gif" class="write-study-gif quarto-figure quarto-figure-center r-stretch"></section>
 <section id="review" class="slide level2">
 <h2>Review</h2>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
 <span id="cb3-3"><a aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">reviewStudy</span>(<span class="fu">here</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a>✔ Study structure found</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a>✔ diagnosticsCode<span class="sc">/</span> and studyCode<span class="sc">/</span> detected</span>
+<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a>✔ renv.lock found</span>
+<span id="cb4-4"><a aria-hidden="true" tabindex="-1"></a>✔ All recorded packages are available from supported repositories</span>
+<span id="cb4-5"><a aria-hidden="true" tabindex="-1"></a><span class="sc">!</span> <span class="dv">1</span> suggested cleanup<span class="sc">:</span> remove an unused package from renv.lock</span>
+<span id="cb4-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a aria-hidden="true" tabindex="-1"></a>Review summary<span class="sc">:</span> <span class="dv">4</span> checks passed, <span class="dv">1</span> suggestion recorded</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <ul>
-<li class="fragment">Reviews study code.</li>
+<li class="fragment">Reviews dependencies.</li>
 <li class="fragment">Summarises dependencies captured in <code>renv.lock</code>.</li>
 <li class="fragment">Helps identify missing requirements before a study is distributed.</li>
 </ul>
 </section>
 <section id="docker" class="slide level2">
 <h2>Docker</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
-<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dockeriseStudy</span>()</span>
-<span id="cb4-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">pushDockerImage</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
+<span id="cb5-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dockeriseStudy</span>()</span>
+<span id="cb5-4"><a aria-hidden="true" tabindex="-1"></a><span class="fu">pushDockerImage</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a>✔ Docker available and running</span>
+<span id="cb6-2"><a aria-hidden="true" tabindex="-1"></a>✔ Building image<span class="sc">:</span> sample<span class="sc">-</span>study<span class="sc">-</span>code<span class="sc">:</span>latest</span>
+<span id="cb6-3"><a aria-hidden="true" tabindex="-1"></a>✔ Image built successfully</span>
+<span id="cb6-4"><a aria-hidden="true" tabindex="-1"></a>✔ Authenticating with Docker registry</span>
+<span id="cb6-5"><a aria-hidden="true" tabindex="-1"></a>✔ Pushed image<span class="sc">:</span> yourname<span class="sc">/</span>sample<span class="sc">-</span>study<span class="sc">-</span>code<span class="sc">:</span>latest</span>
+<span id="cb6-6"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a aria-hidden="true" tabindex="-1"></a>Docker summary<span class="sc">:</span> image built and published successfully</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <ul>
 <li class="fragment">Builds a Docker image for the study.</li>
 <li class="fragment">Pushes that image to Docker Hub or another registry for partner reuse.</li>
@@ -366,38 +389,48 @@
 <section id="typical-workflow" class="slide level2">
 <h2>Typical Workflow</h2>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">initStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">initStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># write study code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="co"># write study code</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">reviewStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">reviewStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">linkGitHub</span>() <span class="sc">/</span> <span class="fu">dockeriseStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">linkGitHub</span>() <span class="sc">/</span> <span class="fu">dockeriseStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">pushDockerImage</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">pushDockerImage</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="fragment workflow-step">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">runStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">runStudy</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li class="fragment">The package supports the study lifecycle from setup through execution and sharing.</li>
 </ul>
 </section>
-<section id="execution-experience" class="slide level2">
-<h2>Execution Experience</h2>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
-<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">runStudy</span>(<span class="at">interactive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="automated-execution" class="slide level2">
+<h2>Automated Execution</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">runStudy</span>(<span class="at">interactive =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
-<li class="fragment">Runs RStudio Server for interactive study execution. <!-- - Also supports automated execution with real-time log streaming. !--></li>
+<li class="fragment">Runs the R Docker image for automated execution.</li>
 <li class="fragment">Expects a <code>.env</code> file in the project root for runtime configuration.</li>
+</ul>
+</section>
+<section id="interactive-execution" class="slide level2">
+<h2>Interactive Execution</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OmopStudyBuilder)</span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">runStudy</span>(<span class="at">interactive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li class="fragment">Runs RStudio Server for interactive study execution.</li>
+<li class="fragment">Opens in the browser with the required packages already installed.</li>
 </ul>
 </section>
 <section id="what-this-improves" class="slide level2">
