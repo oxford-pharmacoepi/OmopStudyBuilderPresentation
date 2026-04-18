@@ -13,6 +13,8 @@ name: Quarto Publish
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    env:
+      RENV_CONFIG_AUTOLOADER_ENABLED: "FALSE"
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -25,6 +27,7 @@ jobs:
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 2
           packages: any::sessioninfo
           extra-packages: |
             any::yaml
