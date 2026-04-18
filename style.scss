@@ -247,3 +247,13 @@ figcaption {
 .reveal .slides section .workflow-step.current-fragment {
   opacity: 1;
 }
+
+.reveal .slides section img.write-study-gif {
+  display: block;
+  width: min(680px, 68%);
+  max-width: 100%;
+  max-height: 480px;
+  height: auto;
+  margin: 1.5rem auto 0;
+  object-fit: contain;
+}
